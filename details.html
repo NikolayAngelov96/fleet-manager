@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fleet Manager</title>
+    <link rel="stylesheet" href="/static/site.css" />
+    <script src="/dist/details.bundle.js" defer></script>
+  </head>
+
+  <body>
+    <div id="content">
+      <h1>Fleet Manager</h1>
+
+      <header>
+        <h2>Vehicle Details</h2>
+        <nav>
+          <a class="nav" href="/index.html">Show Overview</a>
+        </nav>
+      </header>
+      <main>
+        <h3>Opel Corsa</h3>
+        <div class="details">
+          <p><span class="col">ID:</span><strong>0076-5b58</strong></p>
+          <p><span class="col">Body type:</span><strong>Hatchback</strong></p>
+          <p><span class="col">Seats:</span><strong>4</strong></p>
+          <p><span class="col">Transmission:</span><strong>Manual</strong></p>
+          <p><span class="col">Rental price:</span><strong>$55/day</strong></p>
+        </div>
+
+        <div class="rental">
+          <p>
+            <span class="col">Status:</span><strong>Available/Rented</strong>
+          </p>
+          <p>
+            <span class="col">Rented to:</span><strong>John Smith</strong>
+            <button class="action release">End contract</button>
+          </p>
+          <form>
+            <label>
+              <span>Rent to</span>
+              <input type="text" name="name" />
+            </label>
+            <button class="action rent">Confirm</button>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <footer>&copy 2022</footer>
+  </body>
+</html>

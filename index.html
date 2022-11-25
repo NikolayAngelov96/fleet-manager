@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fleet Manager</title>
+    <link rel="stylesheet" href="/static/site.css" />
+    <script src="/dist/index.bundle.js" defer></script>
+  </head>
+
+  <body>
+    <div id="content">
+      <h1>Fleet Manager</h1>
+
+      <header>
+        <h2>Overview</h2>
+        <nav>
+          <a class="nav" href="/cars.html"
+            ><img class="type" src="/assets/car.png" /> Manage Cars</a
+          >
+          <a class="nav" href="/trucks.html"
+            ><img class="type" src="/assets/truck.png" /> Manage Trucks</a
+          >
+        </nav>
+      </header>
+      <main>
+        <form class="float">
+          <label>
+            <span>Vehicle type</span>
+            <select name="type">
+              <option value="0">All</option>
+              <option value="cars">Cars</option>
+              <option value="trucks">Trucks</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Show only Available</span>
+            <div class="check">
+              <input type="checkbox" name="availableOnly" />
+            </div>
+          </label>
+
+          <div class="check"><button class="action">Apply Filter</button></div>
+        </form>
+
+        <table class="overview">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Type</th>
+              <th>Make</th>
+              <th>Model</th>
+              <th>Rental Price</th>
+              <th>Status</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0076-5b58</td>
+              <td>Car</td>
+              <td>Opel</td>
+              <td>Corsa</td>
+              <td>$55/day</td>
+              <td>Available</td>
+              <td>
+                <a class="details-link" href="/details.html?id=0076-5b58"
+                  >Show Details</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>97e2-a592</td>
+              <td>Car</td>
+              <td>Opel</td>
+              <td>Insignia</td>
+              <td>$70/day</td>
+              <td>Rented</td>
+              <td>
+                <a class="details-link" href="/details.html?id=97e2-a592"
+                  >Show Details</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>3af4-ca05</td>
+              <td>Truck</td>
+              <td>Iveco</td>
+              <td>Eurocargo</td>
+              <td>$200/day</td>
+              <td>Rented</td>
+              <td>
+                <a class="details-link" href="/details.html?id=3af4-ca05"
+                  >Show Details</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>cfe0-8ea0</td>
+              <td>Car</td>
+              <td>Audi</td>
+              <td>A3</td>
+              <td>$60/day</td>
+              <td>Available</td>
+              <td>
+                <a class="details-link" href="/details.html?id=cfe0-8ea0"
+                  >Show Details</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>bbe3-243e</td>
+              <td>Truck</td>
+              <td>Fiat</td>
+              <td>Ducato</td>
+              <td>$125/day</td>
+              <td>Available</td>
+              <td>
+                <a class="details-link" href="/details.html?id=bbe3-243e"
+                  >Show Details</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+    </div>
+
+    <footer>&copy 2022</footer>
+  </body>
+</html>

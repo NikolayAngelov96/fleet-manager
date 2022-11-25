@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fleet Manager</title>
+    <link rel="stylesheet" href="/static/site.css" />
+  </head>
+
+  <body>
+    <div id="content">
+      <h1>Fleet Manager</h1>
+
+      <header>
+        <h2>Cars</h2>
+        <nav>
+          <a class="nav" href="/index.html">Show Overview</a>
+        </nav>
+      </header>
+
+      <section class="editor">
+        <button class="action new">Add New Car</button>
+      </section>
+
+      <section class="editor">
+        <h3>New Car</h3>
+        <form class="align">
+          <label>
+            <span>Make</span>
+            <input type="text" name="make" />
+          </label>
+
+          <label>
+            <span>Model</span>
+            <input type="text" name="model" />
+          </label>
+
+          <label>
+            <span>Body type</span>
+            <select name="bodyType">
+              <option value="sedan">Sedan</option>
+              <option value="hatchback">Hatchback</option>
+              <option value="suv">SUV</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Number of seats</span>
+            <input type="number" name="numberOfSeats" />
+          </label>
+
+          <label>
+            <span>Transmission</span>
+            <select name="transmission">
+              <option value="manual">Manual</option>
+              <option value="automatic">Automatic</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Rental price</span>
+            <input type="number" name="rentalPrice" />
+          </label>
+
+          <div>
+            <button class="action confirm">Add Car</button>
+            <button class="action cancel">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="editor">
+        <h3>Edit Car</h3>
+        <form class="align">
+          <label>
+            <span>Make</span>
+            <input type="text" name="make" />
+          </label>
+
+          <label>
+            <span>Model</span>
+            <input type="text" name="model" />
+          </label>
+
+          <label>
+            <span>Body type</span>
+            <select name="bodyType">
+              <option value="sedan">Sedan</option>
+              <option value="hatchback">Hatchback</option>
+              <option value="suv">SUV</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Number of seats</span>
+            <input type="number" name="numberOfSeats" />
+          </label>
+
+          <label>
+            <span>Transmission</span>
+            <select name="transmission">
+              <option value="manual">Manual</option>
+              <option value="automatic">Automatic</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Rental price</span>
+            <input type="number" name="rentalPrice" />
+          </label>
+
+          <div>
+            <button class="action confirm">Save Car</button>
+            <button class="action cancel">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <main>
+        <table class="overview">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Make</th>
+              <th>Model</th>
+              <th>Body Type</th>
+              <th>Seats</th>
+              <th>Transmission</th>
+              <th>Rental Price</th>
+              <th>Control</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0076-5b58</td>
+              <td>Opel</td>
+              <td>Corsa</td>
+              <td>Hatchback</td>
+              <td>4</td>
+              <td>Manual</td>
+              <td>$55/day</td>
+              <td>
+                <button class="action edit">Edit</button>
+                <button class="action delete">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>97e2-a592</td>
+              <td>Opel</td>
+              <td>Insignia</td>
+              <td>Sedan</td>
+              <td>4</td>
+              <td>Automatic</td>
+              <td>$70/day</td>
+              <td>
+                <button class="action edit">Edit</button>
+                <button class="action delete">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>cfe0-8ea0</td>
+              <td>Audi</td>
+              <td>A3</td>
+              <td>Hatchback</td>
+              <td>4</td>
+              <td>Automatic</td>
+              <td>$60/day</td>
+              <td>
+                <button class="action edit">Edit</button>
+                <button class="action delete">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+    </div>
+
+    <footer>&copy 2022</footer>
+  </body>
+</html>
