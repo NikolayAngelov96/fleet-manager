@@ -1,6 +1,6 @@
 import { generateId } from "../utils";
 
-interface Record {
+export interface Record {
   id: string;
 }
 
