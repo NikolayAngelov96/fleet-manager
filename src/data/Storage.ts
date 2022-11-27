@@ -4,27 +4,35 @@ export interface Record {
   id: string;
 }
 
-export interface Storage {
-  getAll(collectionName: string): Promise<Record[]>;
-  getById(collectionName: string, id: string): Promise<Record>;
-  create(collectionName: string, data: any): Promise<Record>;
-  update(collectionName: string, id: string, data: any): Promise<Record>;
+// export interface Storage {
+export interface Storage<T> {
+  // getAll(collectionName: string): Promise<Record[]>;
+  getAll(collectionName: string): Promise<T[]>;
+  // getById(collectionName: string, id: string): Promise<Record>;
+  getById(collectionName: string, id: string): Promise<T>;
+  // create(collectionName: string, data: any): Promise<Record>;
+  create(collectionName: string, data: any): Promise<T>;
+  // update(collectionName: string, id: string, data: any): Promise<Record>;
+  update(collectionName: string, id: string, data: any): Promise<T>;
   delete(collectionName: string, id: string): Promise<void>;
 }
 
-export class LocalStorage implements Storage {
-  async getAll(collectionName: string): Promise<Record[]> {
+export class LocalStorage<T extends Record> implements Storage<T> {
+  // async getAll(collectionName: string): Promise<Record[]> {
+  async getAll(collectionName: string): Promise<T[]> {
     return JSON.parse(localStorage.getItem(collectionName) || null) || [];
   }
 
-  async getById(collectionName: string, id: string): Promise<Record> {
+  // async getById(collectionName: string, id: string): Promise<Record> {
+  async getById(collectionName: string, id: string): Promise<T> {
     const items = await this.getAll(collectionName);
     const result = items.find((x) => x.id == id);
 
     return result;
   }
 
-  async create(collectionName: string, data: any): Promise<Record> {
+  // async create(collectionName: string, data: any): Promise<Record> {
+  async create(collectionName: string, data: any): Promise<T> {
     const items = await this.getAll(collectionName);
 
     const record = Object.assign({}, data, { id: generateId() });
@@ -36,7 +44,8 @@ export class LocalStorage implements Storage {
     return record;
   }
 
-  async update(collectionName: string, id: string, data: any): Promise<Record> {
+  // async update(collectionName: string, id: string, data: any): Promise<Record> {
+  async update(collectionName: string, id: string, data: any): Promise<T> {
     const items = await this.getAll(collectionName);
 
     const index = this.findIndexOfItem(items, id);

@@ -1,9 +1,10 @@
 import { Truck } from "./models";
 import { DataService } from "./Service";
 
-export class TruckService extends DataService<Truck, Omit<Truck, "id">> {
-  protected parseRecord(record: { id: string }): Truck {
-    const data = record as any;
+type TruckWithoutId = Omit<Truck, "id">;
+
+export class TruckService extends DataService<Truck, TruckWithoutId> {
+  protected parseRecord(data: Truck): Truck {
     const truck = new Truck(
       data.id,
       data.make,
@@ -16,7 +17,7 @@ export class TruckService extends DataService<Truck, Omit<Truck, "id">> {
 
     return truck;
   }
-  protected validate(data: any): void {
+  protected validate(data: TruckWithoutId): void {
     if (typeof data.make != "string") {
       throw new TypeError('Incompatible record. Invalid property "make"');
     }

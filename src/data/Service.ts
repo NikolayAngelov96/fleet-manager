@@ -1,6 +1,6 @@
 import { Collection } from "./Collection";
 
-export interface Service<T, TData> {
+export interface Service<T extends { id: string }, TData> {
   getAll(): Promise<T[]>;
   getById(id: string): Promise<T>;
   create(data: TData): Promise<T>;
@@ -8,10 +8,15 @@ export interface Service<T, TData> {
   delete(id: string): Promise<void>;
 }
 
-export abstract class DataService<T, TData> implements Service<T, TData> {
-  private collection: Collection;
+// export abstract class DataService<T, TData> implements Service<T, TData> {
+export abstract class DataService<T extends { id: string }, TData>
+  implements Service<T, TData>
+{
+  // private collection: Collection;
+  private collection: Collection<T>;
 
-  constructor(collection: Collection) {
+  // constructor(collection: Collection) {
+  constructor(collection: Collection<T>) {
     this.collection = collection;
   }
 
@@ -45,7 +50,9 @@ export abstract class DataService<T, TData> implements Service<T, TData> {
     return this.collection.delete(id);
   }
 
-  protected abstract parseRecord(data: { id: string }): T;
+  // protected abstract parseRecord(data: { id: string }): T;
+  protected abstract parseRecord(data: T): T;
 
-  protected abstract validate(data: any): void;
+  // protected abstract validate(data: any): void;
+  protected abstract validate(data: TData): void;
 }
