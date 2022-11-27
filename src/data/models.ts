@@ -8,9 +8,9 @@ export abstract class Vehicle {
   ) {}
 }
 
-type CarBodyType = "sedan" | "suv" | "hatchback";
+export type CarBodyType = "sedan" | "suv" | "hatchback";
 
-type Transmissions = "manual" | "automatic";
+export type Transmissions = "manual" | "automatic";
 
 export class Car extends Vehicle {
   constructor(
