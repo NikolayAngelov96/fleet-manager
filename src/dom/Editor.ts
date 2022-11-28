@@ -34,7 +34,7 @@ export class Editor {
   }
 
   setValues(data: object) {
-    for (const [field, value] of Object.values(data)) {
+    for (const [field, value] of Object.entries(data)) {
       this.setValue(field, value);
     }
   }

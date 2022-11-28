@@ -3,7 +3,7 @@ export class Table {
   // private rows: Map<object, HTMLTableRowElement> = new Map();
 
   constructor(
-    private element: HTMLTableElement,
+    private element: HTMLTableSectionElement,
     private createRow: (record: any) => HTMLTableRowElement,
     records?: any[]
   ) {
