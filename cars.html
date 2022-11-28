@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fleet Manager</title>
     <link rel="stylesheet" href="/static/site.css" />
+    <script src="/dist/cars.bundle.js" defer></script>
   </head>
 
   <body>
@@ -24,7 +25,7 @@
 
       <section class="editor">
         <h3>New Car</h3>
-        <form class="align">
+        <form class="align create-form">
           <label>
             <span>Make</span>
             <input type="text" name="make" />
@@ -71,7 +72,7 @@
 
       <section class="editor">
         <h3>Edit Car</h3>
-        <form class="align">
+        <form class="align edit-form">
           <label>
             <span>Make</span>
             <input type="text" name="make" />
