@@ -4,32 +4,19 @@ import { Car } from "./models";
 type CarWithoutId = Omit<Car, "id">;
 
 export class CarService extends DataService<Car, CarWithoutId> {
-  protected parseRecord({
-    id,
-    make,
-    model,
-    rentalPrice,
-    rentedTo,
-    bodyType,
-    numberOfSeats,
-    transmission,
-  }: Car): Car {
-    rentalPrice = Number(rentalPrice);
-    numberOfSeats = Number(numberOfSeats);
-
-    if (rentedTo == undefined) {
-      rentedTo = null;
-    }
+  protected parseRecord(data: Car): Car {
+    data.rentalPrice = Number(data.rentalPrice);
+    data.numberOfSeats = Number(data.numberOfSeats);
 
     const car = new Car(
-      id,
-      make,
-      model,
-      rentalPrice,
-      rentedTo,
-      bodyType,
-      numberOfSeats,
-      transmission
+      data.id,
+      data.make,
+      data.model,
+      data.rentalPrice,
+      data.rentedTo || null,
+      data.bodyType,
+      data.numberOfSeats,
+      data.transmission
     );
 
     return car;
