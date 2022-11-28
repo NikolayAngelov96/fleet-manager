@@ -17,12 +17,15 @@ export class CarService extends DataService<Car, CarWithoutId> {
     rentalPrice = Number(rentalPrice);
     numberOfSeats = Number(numberOfSeats);
 
+    if (rentedTo == undefined) {
+      rentedTo = null;
+    }
+
     const car = new Car(
       id,
       make,
       model,
       rentalPrice,
-      // possibly null
       rentedTo,
       bodyType,
       numberOfSeats,
@@ -43,7 +46,7 @@ export class CarService extends DataService<Car, CarWithoutId> {
         'Incompatible record. Invalid property "rentalPrice"'
       );
     }
-    if (typeof data.rentedTo != "string" || data.rentedTo != null) {
+    if (typeof data.rentedTo != "string" && data.rentedTo != null) {
       throw new TypeError('Incompatible record. Invalid property "rentedTo"');
     }
     if (typeof data.bodyType != "string") {

@@ -4,20 +4,24 @@ export interface Record {
   id: string;
 }
 
-// export interface Storage {
+/*
+export interface Storage {
+  getAll(collectionName: string): Promise<Record[]>;
+  getById(collectionName: string, id: string): Promise<Record>;
+  create(collectionName: string, data: any): Promise<Record>;
+  update(collectionName: string, id: string, data: any): Promise<Record>;
+  delete(collectionName: string, id: string): Promise<void>;
+}
+*/
+
 export interface Storage<T> {
-  // getAll(collectionName: string): Promise<Record[]>;
   getAll(collectionName: string): Promise<T[]>;
-  // getById(collectionName: string, id: string): Promise<Record>;
   getById(collectionName: string, id: string): Promise<T>;
-  // create(collectionName: string, data: any): Promise<Record>;
   create(collectionName: string, data: any): Promise<T>;
-  // update(collectionName: string, id: string, data: any): Promise<Record>;
   update(collectionName: string, id: string, data: any): Promise<T>;
   delete(collectionName: string, id: string): Promise<void>;
 }
-
-export class LocalStorage<T extends Record> implements Storage<T> {
+export class LocalStorage<T extends { id: string }> implements Storage<T> {
   // async getAll(collectionName: string): Promise<Record[]> {
   async getAll(collectionName: string): Promise<T[]> {
     return JSON.parse(localStorage.getItem(collectionName) || null) || [];
