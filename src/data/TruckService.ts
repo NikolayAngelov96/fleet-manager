@@ -5,12 +5,15 @@ type TruckWithoutId = Omit<Truck, "id">;
 
 export class TruckService extends DataService<Truck, TruckWithoutId> {
   protected parseRecord(data: Truck): Truck {
+    data.rentalPrice = Number(data.rentalPrice);
+    data.capacity = Number(data.capacity);
+
     const truck = new Truck(
       data.id,
       data.make,
       data.model,
       data.rentalPrice,
-      data.rentedTo,
+      data.rentedTo || null,
       data.cargoType,
       data.capacity
     );
@@ -29,7 +32,7 @@ export class TruckService extends DataService<Truck, TruckWithoutId> {
         'Incompatible record. Invalid property "rentalPrice"'
       );
     }
-    if (typeof data.rentedTo != "string" || data.rentedTo != null) {
+    if (typeof data.rentedTo != "string" && data.rentedTo != null) {
       throw new TypeError('Incompatible record. Invalid property "rentedTo"');
     }
     if (typeof data.cargoType != "string") {
