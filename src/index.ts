@@ -1,1 +1,91 @@
-console.log("index");
+import { CarService } from "./data/CarService";
+import { Collection } from "./data/Collection";
+import { Car, Truck, Vehicle } from "./data/models";
+import { LocalStorage } from "./data/Storage";
+import { TruckService } from "./data/TruckService";
+import { a, td, tr } from "./dom/dom";
+import { Table } from "./dom/Table";
+import { getSearchParams, SearchParams } from "./utils";
+
+// TODO: add truck service
+const storage = new LocalStorage<Car>();
+const collection = new Collection<Car>(storage, "cars");
+
+const carService = new CarService(collection);
+
+const truckStorage = new LocalStorage<Truck>();
+const truckCollection = new Collection<Truck>(truckStorage, "trucks");
+
+const truckService = new TruckService(truckCollection);
+
+const tableBody = document.querySelector(
+  ".overview tbody"
+) as HTMLTableSectionElement;
+
+const tableManager = new Table(tableBody, createRow);
+
+console.log(window.location.search);
+
+hydrate();
+
+function createRow(vehicle: Vehicle): HTMLTableRowElement {
+  const status = vehicle.rentedTo == null ? "Available" : "Rented";
+
+  const row = tr(
+    {},
+    td({}, vehicle.id),
+    td({}, vehicle.constructor.name),
+    td({}, vehicle.make),
+    td({}, vehicle.model),
+    td({}, `$${vehicle.rentalPrice}/day`),
+    td({}, status),
+    td(
+      {},
+      a(
+        { className: "details-link", href: `/details.html?id=${vehicle.id}` },
+        "Show Details"
+      )
+    )
+  );
+
+  row.id = vehicle.id;
+
+  return row;
+}
+
+async function hydrate() {
+  const searchParams = getSearchParams(window.location.search);
+
+  const cars = await carService.getAll();
+  const trucks = await truckService.getAll();
+
+  const vehicles: Vehicle[] = [].concat(trucks).concat(cars);
+
+  const filteredVehicles = filterBySearchParams(searchParams, vehicles);
+
+  filteredVehicles.sort((a, b) => a.make.localeCompare(b.make));
+
+  for (const vehicle of filteredVehicles) {
+    tableManager.addRow(vehicle);
+  }
+}
+
+function filterBySearchParams(
+  searchParams: SearchParams,
+  collection: Vehicle[]
+) {
+  if ("type" in searchParams) {
+    if (searchParams.type == "cars") {
+      collection = collection.filter((x) => x instanceof Car);
+    } else if (searchParams.type == "trucks") {
+      collection = collection.filter((x) => x instanceof Truck);
+    }
+  }
+  if ("availableOnly" in searchParams) {
+    if (searchParams.availableOnly == "on") {
+      collection = collection.filter((x) => x.rentedTo == null);
+    }
+  }
+
+  return collection;
+}
