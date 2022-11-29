@@ -1,4 +1,4 @@
-import { CarService } from "./data/CarService";
+import { CarService, SubmitCarData } from "./data/CarService";
 import { Collection } from "./data/Collection";
 import { Car } from "./data/models";
 import { LocalStorage } from "./data/Storage";
@@ -6,9 +6,22 @@ import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
 import { Table } from "./dom/Table";
 
+const newCarSection = document.querySelector(".editor-new") as HTMLElement;
+const editCarSection = document.querySelector(".editor-edit") as HTMLElement;
+
 const form = document.querySelector(".create-form") as HTMLFormElement;
 
-// TODO: validate that onSubmit there are no empty fields
+const addBtn = document.querySelector(".action.new") as HTMLButtonElement;
+
+addBtn.addEventListener("click", () => {
+  newCarSection.style.display = "block";
+  editCarSection.style.display = "none";
+});
+
+// TODO:
+//      validate that onSubmit there are no empty fields
+//      validate that numbered values are not below zero
+//      try catch all request and toast message on error
 
 const storage = new LocalStorage<Car>();
 const collection = new Collection<Car>(storage, "cars");
@@ -26,13 +39,28 @@ hydrate();
 
 tableBody.addEventListener("click", onButtonsClick);
 
+form.querySelector(".cancel").addEventListener("click", (e) => {
+  e.preventDefault();
+  editor.clear();
+  newCarSection.style.display = "none";
+});
+
 // find event type for click
 async function onButtonsClick(e: any) {
   if (e.target.tagName == "BUTTON") {
     const row = e.target.parentElement.parentElement as HTMLTableRowElement;
     if (e.target.classList.contains("edit")) {
+      editCarSection.style.display = "block";
+      newCarSection.style.display = "none";
+
       const editForm = document.querySelector(".edit-form") as HTMLFormElement;
       const editFormController = new Editor(editForm, handleEdit);
+
+      editForm.querySelector(".cancel").addEventListener("click", (e) => {
+        e.preventDefault();
+        editFormController.clear();
+        editCarSection.style.display = "none";
+      });
 
       const car = await carService.getById(row.id);
 
@@ -47,8 +75,8 @@ async function onButtonsClick(e: any) {
 
       editFormController.setValues(fields);
 
-      async function handleEdit(data: Omit<Car, "id" | "rentedTo">) {
-        const record = {
+      async function handleEdit(data: SubmitCarData) {
+        const record: SubmitCarData = {
           make: data.make,
           model: data.model,
           bodyType: data.bodyType,
@@ -56,6 +84,7 @@ async function onButtonsClick(e: any) {
           transmission: data.transmission,
           rentalPrice: Number(data.rentalPrice),
         };
+
         const edittedCar = await carService.update(row.id, record);
 
         tableManager.updateRow(edittedCar.id, edittedCar);
