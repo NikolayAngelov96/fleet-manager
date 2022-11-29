@@ -25,8 +25,28 @@ export class Table {
   }
 
   getRow(id: string): HTMLTableRowElement {
+    console.log("get row func", id);
     const row = this.element.querySelector(`#${id}`) as HTMLTableRowElement;
 
     return row;
+  }
+
+  updateRow(rowId: string, record: any) {
+    const row = this.getRow(rowId);
+
+    const indexOfOldRecord = this.records.findIndex((x) => x.id == record.id);
+
+    this.records[indexOfOldRecord] = record;
+
+    const nextSibling = row.nextElementSibling;
+
+    const newRow = this.createRow(record);
+    row.remove();
+
+    if (nextSibling != null) {
+      nextSibling.parentElement.insertBefore(newRow, nextSibling);
+    } else {
+      this.element.appendChild(newRow);
+    }
   }
 }
