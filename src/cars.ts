@@ -8,16 +8,68 @@ import { Table } from "./dom/Table";
 
 const form = document.querySelector(".create-form") as HTMLFormElement;
 
+// TODO: validate that onSubmit there are no empty fields
+
 const storage = new LocalStorage<Car>();
 const collection = new Collection<Car>(storage, "cars");
 const carService = new CarService(collection);
 
-const table = document.querySelector(".overview") as HTMLTableElement;
-const tableManager = new Table(table, createRow);
+const tableBody = document.querySelector(
+  ".overview tbody"
+) as HTMLTableSectionElement;
+
+const tableManager = new Table(tableBody, createRow);
 
 const editor = new Editor(form, onAddCar);
 
 hydrate();
+
+tableBody.addEventListener("click", onButtonsClick);
+
+// find event type for click
+async function onButtonsClick(e: any) {
+  if (e.target.tagName == "BUTTON") {
+    const row = e.target.parentElement.parentElement as HTMLTableRowElement;
+    if (e.target.classList.contains("edit")) {
+      const editForm = document.querySelector(".edit-form") as HTMLFormElement;
+      const editFormController = new Editor(editForm, handleEdit);
+
+      const car = await carService.getById(row.id);
+
+      const fields = {
+        make: car.make,
+        model: car.model,
+        bodyType: car.bodyType,
+        numberOfSeats: car.numberOfSeats,
+        transmission: car.transmission,
+        rentalPrice: car.rentalPrice,
+      };
+
+      editFormController.setValues(fields);
+
+      async function handleEdit(data: Omit<Car, "id" | "rentedTo">) {
+        const record = {
+          make: data.make,
+          model: data.model,
+          bodyType: data.bodyType,
+          numberOfSeats: Number(data.numberOfSeats),
+          transmission: data.transmission,
+          rentalPrice: Number(data.rentalPrice),
+        };
+        const edittedCar = await carService.update(row.id, record);
+
+        tableManager.updateRow(edittedCar.id, edittedCar);
+
+        editFormController.clear();
+      }
+    } else if (e.target.classList.contains("delete")) {
+      if (confirm("Are you sure you want to delete this car?")) {
+        await carService.delete(row.id);
+        row.remove();
+      }
+    }
+  }
+}
 
 function createRow(car: Car): HTMLTableRowElement {
   let formattedBodyType =
@@ -52,7 +104,6 @@ async function onAddCar({
   rentalPrice,
   bodyType,
   numberOfSeats,
-  rentedTo,
   transmission,
 }: any) {
   rentalPrice = Number(rentalPrice);
@@ -72,7 +123,6 @@ async function onAddCar({
     rentalPrice,
     bodyType,
     numberOfSeats,
-    rentedTo,
     transmission,
   });
 
