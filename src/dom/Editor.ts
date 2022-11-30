@@ -13,6 +13,13 @@ export class Editor {
 
     const data = Object.fromEntries(formData);
 
+    let errorKeys = this.checkOnSubmitForEmptyFields(data);
+
+    if (errorKeys.length > 0) {
+      this.displaySubmitErrors(errorKeys);
+      return;
+    }
+
     this.submitHandler(data);
   }
 
@@ -49,5 +56,36 @@ export class Editor {
 
   attachTo(parent: HTMLElement) {
     parent.appendChild(this.form);
+  }
+
+  private checkOnSubmitForEmptyFields(data: any) {
+    let keysWithErrors: string[] = [];
+
+    for (const field in data) {
+      if (data[field] == "") {
+        keysWithErrors.push(field);
+      }
+    }
+
+    return keysWithErrors;
+  }
+
+  private displaySubmitErrors(keys: string[]) {
+    let errorMessage = "Please fill all required fields";
+
+    const errorElement = document.createElement("div");
+
+    errorElement.style.color = "red";
+    errorElement.textContent = errorMessage;
+
+    this.form.prepend(errorElement);
+
+    for (const key of keys) {
+      const element = this.form.querySelector(
+        `[name="${key}"]`
+      ) as HTMLInputElement;
+
+      element.style.border = "2px solid red";
+    }
   }
 }
