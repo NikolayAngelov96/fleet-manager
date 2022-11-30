@@ -57,7 +57,7 @@ async function onButtonsClick(e: any) {
 
       const truck = await truckService.getById(row.id);
 
-      const fields = {
+      const fields: SubmitTruckData = {
         make: truck.make,
         model: truck.model,
         cargoType: truck.cargoType,

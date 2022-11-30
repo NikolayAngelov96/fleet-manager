@@ -64,7 +64,7 @@ async function onButtonsClick(e: any) {
 
       const car = await carService.getById(row.id);
 
-      const fields = {
+      const fields: SubmitCarData = {
         make: car.make,
         model: car.model,
         bodyType: car.bodyType,
