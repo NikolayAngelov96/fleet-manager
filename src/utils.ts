@@ -11,8 +11,8 @@ export type SearchParams = {
   availableOnly?: string;
 };
 
-export function getSearchParams(str: string) {
-  const query = new URLSearchParams(window.location.search);
+export function getSearchParams(location: string) {
+  const query = new URLSearchParams(location);
 
   let params: SearchParams = {};
   for (const [key, value] of [...query.entries()]) {
@@ -33,46 +33,4 @@ export function getSearchParams(query: string) {
 
   return params;
 }
-
-/*
-
-export function checkOnSubmitForEmptyFields<T>(data: T) {
-  let keysWithErrors: string[] = [];
-
-  for (const key in data) {
-    if (data[key] == "") {
-      keysWithErrors.push(key);
-    }
-  }
-
-  return keysWithErrors;
-}
-
-export function displaySubmitErrors(keys: string[]) {
-  for (const key of keys) {
-    let errorMessage = `${key} is a required field`;
-    const errorElement = span({ className: "error-message" }, errorMessage);
-
-    const inputElement = document.querySelector(
-      `[name=${key}]`
-    ) as HTMLInputElement;
-
-    inputElement.style.position = "relative";
-
-    inputElement.appendChild(errorElement);
-
-    inputElement.style.border = "2px solid red";
-  }
-}
-
-
-styles:
-
-.error-message {
-  color: red;
-  position: absolute;
-  top: 0;
-  right: -270px;
-}
-
 */
