@@ -1,10 +1,20 @@
 import { Collection } from "./data/Collection";
 import { Truck } from "./data/models";
 import { LocalStorage } from "./data/Storage";
-import { TruckService } from "./data/TruckService";
+import { TruckService, SubmitTruckData } from "./data/TruckService";
 import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
 import { Table } from "./dom/Table";
+
+const newTruckSection = document.querySelector(".editor-new") as HTMLElement;
+const editTruckSection = document.querySelector(".editor-edit") as HTMLElement;
+
+const addBtn = document.querySelector(".action.new") as HTMLButtonElement;
+
+addBtn.addEventListener("click", () => {
+  (newTruckSection.style.display = "block"),
+    (editTruckSection.style.display = "none");
+});
 
 const storage = new LocalStorage<Truck>();
 const collection = new Collection<Truck>(storage, "trucks");
@@ -22,14 +32,79 @@ const tableManager = new Table(tableBody, createRow);
 
 hydrate();
 
+createForm.querySelector(".cancel").addEventListener("click", (e) => {
+  e.preventDefault();
+  editor.clear();
+  newTruckSection.style.display = "none";
+});
+
+tableBody.addEventListener("click", onButtonsClick);
+
+async function onButtonsClick(e: any) {
+  if (e.target.tagName == "BUTTON") {
+    const row = e.target.parentElement.parentElement as HTMLTableRowElement;
+    if (e.target.classList.contains("edit")) {
+      editTruckSection.style.display = "block";
+      newTruckSection.style.display = "none";
+
+      const editForm = document.querySelector(".edit-form") as HTMLFormElement;
+      const editFormController = new Editor(editForm, handleEdit);
+      editForm.querySelector(".cancel").addEventListener("click", (e) => {
+        e.preventDefault();
+        editFormController.clear();
+        editTruckSection.style.display = "none";
+      });
+
+      const truck = await truckService.getById(row.id);
+
+      const fields = {
+        make: truck.make,
+        model: truck.model,
+        cargoType: truck.cargoType,
+        capacity: truck.capacity,
+        rentalPrice: truck.rentalPrice,
+      };
+
+      editFormController.setValues(fields);
+
+      // Same for trucks and cars
+      // When you tried to edit for second time(without refresh of page)
+      // the same record it saves the data correct but then triggers the event lister on empty field and rewrite the data
+      // I added check in TruckService.ts data.make == "" throw Error and it fixed the problem but throws the error on the console
+
+      async function handleEdit(data: SubmitTruckData) {
+        const record: SubmitTruckData = {
+          make: data.make,
+          model: data.model,
+          cargoType: data.cargoType,
+          capacity: Number(data.capacity),
+          rentalPrice: Number(data.rentalPrice),
+        };
+
+        const edditedTruck = await truckService.update(row.id, record);
+
+        tableManager.updateRow(edditedTruck.id, edditedTruck);
+
+        editFormController.clear();
+      }
+    } else if (e.target.classList.contains("delete")) {
+      if (confirm("Are you sure you want to delete this truck")) {
+        await truckService.delete(row.id);
+        row.remove();
+      }
+    }
+  }
+}
+
 function createRow(truck: Truck) {
+  const formattedCapacity = `${truck.capacity / 1000} tons`;
   const row = tr(
     {},
     td({}, truck.id),
     td({}, truck.make),
     td({}, truck.model),
     td({}, truck.cargoType),
-    td({}, truck.capacity.toString()),
+    td({}, formattedCapacity),
     td({}, `$${truck.rentalPrice}/day`),
     td(
       {},
@@ -49,7 +124,6 @@ async function onAddTruck({
   cargoType,
   capacity,
   rentalPrice,
-  rentedTo,
 }: any) {
   rentalPrice = Number(rentalPrice);
   capacity = Number(capacity);
@@ -68,7 +142,6 @@ async function onAddTruck({
     cargoType,
     capacity,
     rentalPrice,
-    rentedTo,
   });
 
   tableManager.addRow(truck);
