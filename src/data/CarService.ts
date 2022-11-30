@@ -1,9 +1,9 @@
 import { DataService } from "./Service";
 import { Car } from "./models";
 
-type CarWhenCreated = Omit<Car, "id" | "rentedTo">;
+export type SubmitCarData = Omit<Car, "id" | "rentedTo">;
 
-export class CarService extends DataService<Car, CarWhenCreated> {
+export class CarService extends DataService<Car, SubmitCarData> {
   protected parseRecord(data: Car): Car {
     data.rentalPrice = Number(data.rentalPrice);
     data.numberOfSeats = Number(data.numberOfSeats);
@@ -21,7 +21,7 @@ export class CarService extends DataService<Car, CarWhenCreated> {
 
     return car;
   }
-  protected validate(data: CarWhenCreated): void {
+  protected validate(data: SubmitCarData): void {
     if (typeof data.make != "string") {
       throw new TypeError('Incompatible record. Invalid property "make"');
     }

@@ -1,9 +1,9 @@
 import { Truck } from "./models";
 import { DataService } from "./Service";
 
-type TruckWithoutId = Omit<Truck, "id">;
+export type SubmitTruckData = Omit<Truck, "id" | "rentedTo">;
 
-export class TruckService extends DataService<Truck, TruckWithoutId> {
+export class TruckService extends DataService<Truck, SubmitTruckData> {
   protected parseRecord(data: Truck): Truck {
     data.rentalPrice = Number(data.rentalPrice);
     data.capacity = Number(data.capacity);
@@ -20,7 +20,7 @@ export class TruckService extends DataService<Truck, TruckWithoutId> {
 
     return truck;
   }
-  protected validate(data: TruckWithoutId): void {
+  protected validate(data: SubmitTruckData): void {
     if (typeof data.make != "string") {
       throw new TypeError('Incompatible record. Invalid property "make"');
     }
@@ -32,9 +32,9 @@ export class TruckService extends DataService<Truck, TruckWithoutId> {
         'Incompatible record. Invalid property "rentalPrice"'
       );
     }
-    if (typeof data.rentedTo != "string" && data.rentedTo != null) {
-      throw new TypeError('Incompatible record. Invalid property "rentedTo"');
-    }
+    // if (typeof data.rentedTo != "string" && data.rentedTo != null) {
+    //   throw new TypeError('Incompatible record. Invalid property "rentedTo"');
+    // }
     if (typeof data.cargoType != "string") {
       throw new TypeError('Incompatible record. Invalid property "cargoType"');
     }
