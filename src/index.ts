@@ -24,8 +24,6 @@ const tableBody = document.querySelector(
 
 const tableManager = new Table(tableBody, createRow);
 
-console.log(window.location.search);
-
 hydrate();
 
 function createRow(vehicle: Vehicle): HTMLTableRowElement {
@@ -56,6 +54,8 @@ function createRow(vehicle: Vehicle): HTMLTableRowElement {
 async function hydrate() {
   const searchParams = getSearchParams(window.location.search);
 
+  setUpFormValues(searchParams);
+
   const cars = await carService.getAll();
   const trucks = await truckService.getAll();
 
@@ -67,6 +67,20 @@ async function hydrate() {
 
   for (const vehicle of filteredVehicles) {
     tableManager.addRow(vehicle);
+  }
+}
+
+function setUpFormValues(values: SearchParams) {
+  for (const key in values) {
+    const element = document.querySelector(`[name="${key}"]`);
+
+    if (element instanceof HTMLSelectElement) {
+      element.value = values[key];
+    } else if (element instanceof HTMLInputElement) {
+      if (element.type == "checkbox") {
+        element.checked = values[key] == "on" ? true : false;
+      }
+    }
   }
 }
 
