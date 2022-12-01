@@ -5,6 +5,7 @@ import { TruckService, SubmitTruckData } from "./data/TruckService";
 import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
 import { Table } from "./dom/Table";
+import { toast } from "./dom/Toaster";
 
 const newTruckSection = document.querySelector(".editor-new") as HTMLElement;
 const editTruckSection = document.querySelector(".editor-edit") as HTMLElement;
@@ -87,11 +88,14 @@ async function onButtonsClick(e: MouseEvent) {
         tableManager.updateRow(edditedTruck.id, edditedTruck);
 
         editFormController.clear();
+
+        toast.success(`Successfully edited ${record.make} ${record.model}`);
       }
     } else if (e.target.classList.contains("delete")) {
       if (confirm("Are you sure you want to delete this truck")) {
         await truckService.delete(row.id);
         row.remove();
+        toast.success("Successfully deleted");
       }
     }
   }
@@ -148,6 +152,8 @@ async function onAddTruck({
   tableManager.addRow(truck);
 
   editor.clear();
+
+  toast.success(`Successfully added ${truck.make} ${truck.model}`);
 }
 
 async function hydrate() {

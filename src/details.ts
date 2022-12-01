@@ -5,6 +5,7 @@ import { LocalStorage } from "./data/Storage";
 import { TruckService } from "./data/TruckService";
 import { p, span, strong } from "./dom/dom";
 import { Editor } from "./dom/Editor";
+import { toast } from "./dom/Toaster";
 import { capitalizeWord, getSearchParams } from "./utils";
 
 const storage = new LocalStorage<Car>();
@@ -50,12 +51,14 @@ async function onCancelContract(e: MouseEvent) {
   rentedName.parentElement.style.display = "none";
   editor.attachTo(rentalDiv);
   statusElement.textContent = "Available";
+
+  toast.success(`Vehicle was successfully returned`);
 }
 
-async function onSubmit(data: { name: string }) {
+async function onSubmit(person: { name: string }) {
   const vehicle = await getVehicle(query.id);
 
-  vehicle.rentedTo = data.name;
+  vehicle.rentedTo = person.name;
 
   if (vehicle instanceof Car) {
     await carService.update(vehicle.id, vehicle);
@@ -69,6 +72,10 @@ async function onSubmit(data: { name: string }) {
 
   editor.clear();
   editor.remove();
+
+  toast.success(
+    `Successfully rented ${vehicle.make} ${vehicle.model} to ${person.name}`
+  );
 }
 
 hydrate();

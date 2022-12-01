@@ -5,6 +5,7 @@ import { LocalStorage } from "./data/Storage";
 import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
 import { Table } from "./dom/Table";
+import { toast } from "./dom/Toaster";
 
 const newCarSection = document.querySelector(".editor-new") as HTMLElement;
 const editCarSection = document.querySelector(".editor-edit") as HTMLElement;
@@ -91,11 +92,14 @@ async function onButtonsClick(e: MouseEvent) {
         tableManager.updateRow(edittedCar.id, edittedCar);
 
         editFormController.clear();
+
+        toast.success(`Successfully edited ${record.make} ${record.model}`);
       }
     } else if (e.target.classList.contains("delete")) {
       if (confirm("Are you sure you want to delete this car?")) {
         await carService.delete(row.id);
         row.remove();
+        toast.success("Successfully deleted");
       }
     }
   }
@@ -159,6 +163,8 @@ async function onAddCar({
   tableManager.addRow(car);
 
   editor.clear();
+
+  toast.success(`Successfully added ${car.make} ${car.model}`);
 }
 
 async function hydrate() {
