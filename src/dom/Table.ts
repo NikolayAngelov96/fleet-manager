@@ -25,8 +25,8 @@ export class Table {
   }
 
   getRow(id: string): HTMLTableRowElement {
-    console.log("get row func", id);
-    const row = this.element.querySelector(`#${id}`) as HTMLTableRowElement;
+    // const row = this.element.querySelector(`#${id}`) as HTMLTableRowElement;
+    const row = document.getElementById(id) as HTMLTableRowElement;
 
     return row;
   }
@@ -41,12 +41,7 @@ export class Table {
     const nextSibling = row.nextElementSibling;
 
     const newRow = this.createRow(record);
-    row.remove();
 
-    if (nextSibling != null) {
-      nextSibling.parentElement.insertBefore(newRow, nextSibling);
-    } else {
-      this.element.appendChild(newRow);
-    }
+    row.replaceWith(newRow);
   }
 }
