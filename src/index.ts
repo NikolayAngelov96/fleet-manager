@@ -52,7 +52,10 @@ function createRow(vehicle: Vehicle): HTMLTableRowElement {
 }
 
 async function hydrate() {
-  const searchParams = getSearchParams(window.location.search);
+  const searchParams = getSearchParams<{
+    type?: string;
+    availableOnly?: string;
+  }>(window.location.search);
 
   setUpFormValues(searchParams);
 
