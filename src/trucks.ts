@@ -97,14 +97,14 @@ async function onButtonsClick(e: MouseEvent) {
 }
 
 function createRow(truck: Truck) {
-  const formattedCapacity = `${truck.capacity / 1000} tons`;
+  const formatedCapacity = `${truck.capacity / 1000} tons`;
   const row = tr(
     {},
     td({}, truck.id),
     td({}, truck.make),
     td({}, truck.model),
     td({}, truck.cargoType),
-    td({}, formattedCapacity),
+    td({}, formatedCapacity),
     td({}, `$${truck.rentalPrice}/day`),
     td(
       {},
