@@ -4,6 +4,7 @@ import { Car, Truck, Vehicle } from "./data/models";
 import { LocalStorage } from "./data/Storage";
 import { TruckService } from "./data/TruckService";
 import { p, span, strong } from "./dom/dom";
+import { Editor } from "./dom/Editor";
 import { capitalizeWord, getSearchParams } from "./utils";
 
 const storage = new LocalStorage<Car>();
@@ -18,16 +19,43 @@ const truckService = new TruckService(truckCollection);
 
 const detailsContainer = document.querySelector(".details");
 
+const form = document.querySelector("form");
+
+const query = getSearchParams<{ id: string }>(window.location.search);
+
+const editor = new Editor(form, onSubmit);
+
+async function onSubmit(data: { name: string }) {
+  const vehicle = await getVehicle(query.id);
+
+  vehicle.rentedTo = data.name;
+
+  if (vehicle instanceof Car) {
+    await carService.update(vehicle.id, vehicle);
+  } else if (vehicle instanceof Truck) {
+    await truckCollection.update(vehicle.id, vehicle);
+  }
+
+  editor.clear();
+}
+
 hydrate();
 
 async function hydrate() {
-  const query = getSearchParams<{ id: string }>(window.location.search);
   const vehicleTitle = document.getElementById("vehicle-make");
   const statusElement = document.getElementById("status");
+  const rentedName = document.getElementById("rented-name");
 
   const vehicle = await getVehicle(query.id);
 
   const status = vehicle.rentedTo == null ? "Available" : "Rented";
+
+  if (vehicle.rentedTo != null) {
+    editor.remove();
+    rentedName.parentElement.style.display = "block";
+  } else {
+    rentedName.parentElement.style.display = "none";
+  }
 
   let elements: HTMLElement[];
   if (vehicle instanceof Car) {
@@ -38,6 +66,7 @@ async function hydrate() {
 
   vehicleTitle.textContent = `${vehicle.make} ${vehicle.model}`;
   statusElement.textContent = status;
+  rentedName.textContent = vehicle.rentedTo;
   detailsContainer.replaceChildren(...elements);
 }
 
