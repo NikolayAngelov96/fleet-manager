@@ -21,9 +21,36 @@ const detailsContainer = document.querySelector(".details");
 
 const form = document.querySelector("form");
 
+const statusElement = document.getElementById("status");
+const rentedName = document.getElementById("rented-name");
+
+const rentalDiv = document.querySelector(".rental") as HTMLDivElement;
+
 const query = getSearchParams<{ id: string }>(window.location.search);
 
 const editor = new Editor(form, onSubmit);
+
+const cancelContrachBtn = document.querySelector(
+  ".release"
+) as HTMLButtonElement;
+
+cancelContrachBtn.addEventListener("click", onCancelContract);
+
+async function onCancelContract(e: MouseEvent) {
+  const vehicle = await getVehicle(query.id);
+
+  vehicle.rentedTo = null;
+
+  if (vehicle instanceof Car) {
+    await carService.update(vehicle.id, vehicle);
+  } else if (vehicle instanceof Truck) {
+    await truckCollection.update(vehicle.id, vehicle);
+  }
+
+  rentedName.parentElement.style.display = "none";
+  editor.attachTo(rentalDiv);
+  statusElement.textContent = "Available";
+}
 
 async function onSubmit(data: { name: string }) {
   const vehicle = await getVehicle(query.id);
@@ -36,15 +63,18 @@ async function onSubmit(data: { name: string }) {
     await truckCollection.update(vehicle.id, vehicle);
   }
 
+  rentedName.textContent = vehicle.rentedTo;
+  rentedName.parentElement.style.display = "block";
+  statusElement.textContent = "Rented";
+
   editor.clear();
+  editor.remove();
 }
 
 hydrate();
 
 async function hydrate() {
   const vehicleTitle = document.getElementById("vehicle-make");
-  const statusElement = document.getElementById("status");
-  const rentedName = document.getElementById("rented-name");
 
   const vehicle = await getVehicle(query.id);
 
@@ -93,7 +123,7 @@ function createCarDetails(car: Car) {
   const rentalPrice = p(
     {},
     span({ className: "col" }, "Rental price:"),
-    strong({}, car.rentalPrice.toString())
+    strong({}, `$${car.rentalPrice}/day`)
   );
 
   return [id, type, seats, transmission, rentalPrice];
@@ -101,6 +131,8 @@ function createCarDetails(car: Car) {
 
 function createTruckDetails(truck: Truck) {
   const formatedType = capitalizeWord(truck.cargoType);
+  const formatedCapacity = `${truck.capacity / 1000} tons`;
+
   const id = p({}, span({ className: "col" }, "ID:"), strong({}, truck.id));
   const type = p(
     {},
@@ -110,12 +142,12 @@ function createTruckDetails(truck: Truck) {
   const seats = p(
     {},
     span({ className: "col" }, "Capacity:"),
-    strong({}, truck.capacity.toString())
+    strong({}, formatedCapacity)
   );
   const rentalPrice = p(
     {},
     span({ className: "col" }, "Rental price:"),
-    strong({}, truck.rentalPrice.toString())
+    strong({}, `$${truck.rentalPrice}/day`)
   );
 
   return [id, type, seats, rentalPrice];
