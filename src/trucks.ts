@@ -73,12 +73,13 @@ async function onButtonsClick(e: MouseEvent) {
       // I added check in TruckService.ts data.make == "" throw Error and it fixed the problem but throws the error on the console
 
       async function handleEdit(data: SubmitTruckData) {
-        const record: SubmitTruckData = {
+        const record = {
           make: data.make,
           model: data.model,
           cargoType: data.cargoType,
           capacity: Number(data.capacity),
           rentalPrice: Number(data.rentalPrice),
+          rentedTo: truck.rentedTo,
         };
 
         const edditedTruck = await truckService.update(row.id, record);

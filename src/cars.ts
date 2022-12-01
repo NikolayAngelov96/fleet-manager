@@ -76,13 +76,14 @@ async function onButtonsClick(e: MouseEvent) {
       editFormController.setValues(fields);
 
       async function handleEdit(data: SubmitCarData) {
-        const record: SubmitCarData = {
+        const record = {
           make: data.make,
           model: data.model,
           bodyType: data.bodyType,
           numberOfSeats: Number(data.numberOfSeats),
           transmission: data.transmission,
           rentalPrice: Number(data.rentalPrice),
+          rentedTo: car.rentedTo,
         };
 
         const edittedCar = await carService.update(row.id, record);
