@@ -46,8 +46,8 @@ form.querySelector(".cancel").addEventListener("click", (e) => {
 });
 
 // find event type for click
-async function onButtonsClick(e: any) {
-  if (e.target.tagName == "BUTTON") {
+async function onButtonsClick(e: MouseEvent) {
+  if (e.target instanceof HTMLButtonElement) {
     const row = e.target.parentElement.parentElement as HTMLTableRowElement;
     if (e.target.classList.contains("edit")) {
       editCarSection.style.display = "block";

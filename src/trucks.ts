@@ -40,8 +40,8 @@ createForm.querySelector(".cancel").addEventListener("click", (e) => {
 
 tableBody.addEventListener("click", onButtonsClick);
 
-async function onButtonsClick(e: any) {
-  if (e.target.tagName == "BUTTON") {
+async function onButtonsClick(e: MouseEvent) {
+  if (e.target instanceof HTMLButtonElement) {
     const row = e.target.parentElement.parentElement as HTMLTableRowElement;
     if (e.target.classList.contains("edit")) {
       editTruckSection.style.display = "block";
