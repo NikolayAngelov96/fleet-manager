@@ -34,6 +34,4 @@ class Toaster {
   }
 }
 
-const toast = new Toaster();
-
-export default toast;
+export const toast = new Toaster();
