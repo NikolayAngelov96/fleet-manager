@@ -87,5 +87,16 @@ export class Editor {
 
       element.style.border = "2px solid red";
     }
+
+    setTimeout(() => {
+      for (const key of keys) {
+        const element = this.form.querySelector(
+          `[name="${key}"]`
+        ) as HTMLInputElement;
+
+        errorElement.remove();
+        element.style.border = "";
+      }
+    }, 4000);
   }
 }
