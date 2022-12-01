@@ -11,15 +11,19 @@ export type SearchParams = {
   availableOnly?: string;
 };
 
-export function getSearchParams(location: string) {
+export function getSearchParams<T>(location: string) {
   const query = new URLSearchParams(location);
 
-  let params: SearchParams = {};
+  let params = {};
   for (const [key, value] of [...query.entries()]) {
     params[key] = value;
   }
 
-  return params;
+  return params as T;
+}
+
+export function capitalizeWord(word: string) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
 /*
 export function getSearchParams(query: string) {
