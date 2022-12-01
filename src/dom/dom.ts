@@ -46,3 +46,5 @@ export const button: elementFactory<HTMLButtonElement> = e.bind(null, "button");
 export const span: elementFactory<HTMLSpanElement> = e.bind(null, "span");
 export const div: elementFactory<HTMLDivElement> = e.bind(null, "div");
 export const a: elementFactory<HTMLAnchorElement> = e.bind(null, "a");
+export const p: elementFactory<HTMLParagraphElement> = e.bind(null, "p");
+export const strong: elementFactory<HTMLElement> = e.bind(null, "strong");
