@@ -87,19 +87,33 @@ async function onButtonsClick(e: MouseEvent) {
           rentedTo: car.rentedTo,
         };
 
-        const edittedCar = await carService.update(row.id, record);
+        try {
+          const edittedCar = await carService.update(row.id, record);
 
-        tableManager.updateRow(edittedCar.id, edittedCar);
+          tableManager.updateRow(edittedCar.id, edittedCar);
 
-        editFormController.clear();
+          editFormController.clear();
 
-        toast.success(`Successfully edited ${record.make} ${record.model}`);
+          toast.success(`Successfully edited ${record.make} ${record.model}`);
+        } catch (error) {
+          console.error(error);
+          if (error instanceof Error) {
+            toast.error(error.message);
+          }
+        }
       }
     } else if (e.target.classList.contains("delete")) {
       if (confirm("Are you sure you want to delete this car?")) {
-        await carService.delete(row.id);
-        row.remove();
-        toast.success("Successfully deleted");
+        try {
+          await carService.delete(row.id);
+          row.remove();
+          toast.success("Successfully deleted");
+        } catch (error) {
+          console.error(error);
+          if (error instanceof Error) {
+            toast.error(error.message);
+          }
+        }
       }
     }
   }
@@ -143,28 +157,35 @@ async function onAddCar({
   rentalPrice = Number(rentalPrice);
   numberOfSeats = Number(numberOfSeats);
 
-  if (Number.isNaN(rentalPrice)) {
-    throw new TypeError("Rental price must be a number");
+  try {
+    if (Number.isNaN(rentalPrice)) {
+      throw new TypeError("Rental price must be a number");
+    }
+
+    if (Number.isNaN(numberOfSeats)) {
+      throw new TypeError("Number of seats must be a number");
+    }
+
+    const car = await carService.create({
+      make,
+      model,
+      rentalPrice,
+      bodyType,
+      numberOfSeats,
+      transmission,
+    });
+
+    tableManager.addRow(car);
+
+    editor.clear();
+
+    toast.success(`Successfully added ${car.make} ${car.model}`);
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
   }
-
-  if (Number.isNaN(numberOfSeats)) {
-    throw new TypeError("Number of seats must be a number");
-  }
-
-  const car = await carService.create({
-    make,
-    model,
-    rentalPrice,
-    bodyType,
-    numberOfSeats,
-    transmission,
-  });
-
-  tableManager.addRow(car);
-
-  editor.clear();
-
-  toast.success(`Successfully added ${car.make} ${car.model}`);
 }
 
 async function hydrate() {

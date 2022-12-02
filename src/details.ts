@@ -38,44 +38,58 @@ const cancelContrachBtn = document.querySelector(
 cancelContrachBtn.addEventListener("click", onCancelContract);
 
 async function onCancelContract(e: MouseEvent) {
-  const vehicle = await getVehicle(query.id);
+  try {
+    const vehicle = await getVehicle(query.id);
 
-  vehicle.rentedTo = null;
+    vehicle.rentedTo = null;
 
-  if (vehicle instanceof Car) {
-    await carService.update(vehicle.id, vehicle);
-  } else if (vehicle instanceof Truck) {
-    await truckCollection.update(vehicle.id, vehicle);
+    if (vehicle instanceof Car) {
+      await carService.update(vehicle.id, vehicle);
+    } else if (vehicle instanceof Truck) {
+      await truckCollection.update(vehicle.id, vehicle);
+    }
+
+    rentedName.parentElement.style.display = "none";
+    editor.attachTo(rentalDiv);
+    statusElement.textContent = "Available";
+
+    toast.success(`Vehicle was successfully returned`);
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
   }
-
-  rentedName.parentElement.style.display = "none";
-  editor.attachTo(rentalDiv);
-  statusElement.textContent = "Available";
-
-  toast.success(`Vehicle was successfully returned`);
 }
 
 async function onSubmit(person: { name: string }) {
-  const vehicle = await getVehicle(query.id);
+  try {
+    const vehicle = await getVehicle(query.id);
 
-  vehicle.rentedTo = person.name;
+    vehicle.rentedTo = person.name;
 
-  if (vehicle instanceof Car) {
-    await carService.update(vehicle.id, vehicle);
-  } else if (vehicle instanceof Truck) {
-    await truckCollection.update(vehicle.id, vehicle);
+    if (vehicle instanceof Car) {
+      await carService.update(vehicle.id, vehicle);
+    } else if (vehicle instanceof Truck) {
+      await truckCollection.update(vehicle.id, vehicle);
+    }
+
+    rentedName.textContent = vehicle.rentedTo;
+    rentedName.parentElement.style.display = "block";
+    statusElement.textContent = "Rented";
+
+    editor.clear();
+    editor.remove();
+
+    toast.success(
+      `Successfully rented ${vehicle.make} ${vehicle.model} to ${person.name}`
+    );
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
   }
-
-  rentedName.textContent = vehicle.rentedTo;
-  rentedName.parentElement.style.display = "block";
-  statusElement.textContent = "Rented";
-
-  editor.clear();
-  editor.remove();
-
-  toast.success(
-    `Successfully rented ${vehicle.make} ${vehicle.model} to ${person.name}`
-  );
 }
 
 hydrate();

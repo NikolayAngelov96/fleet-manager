@@ -83,19 +83,33 @@ async function onButtonsClick(e: MouseEvent) {
           rentedTo: truck.rentedTo,
         };
 
-        const edditedTruck = await truckService.update(row.id, record);
+        try {
+          const edditedTruck = await truckService.update(row.id, record);
 
-        tableManager.updateRow(edditedTruck.id, edditedTruck);
+          tableManager.updateRow(edditedTruck.id, edditedTruck);
 
-        editFormController.clear();
+          editFormController.clear();
 
-        toast.success(`Successfully edited ${record.make} ${record.model}`);
+          toast.success(`Successfully edited ${record.make} ${record.model}`);
+        } catch (error) {
+          console.error(error);
+          if (error instanceof Error) {
+            toast.error(error.message);
+          }
+        }
       }
     } else if (e.target.classList.contains("delete")) {
       if (confirm("Are you sure you want to delete this truck")) {
-        await truckService.delete(row.id);
-        row.remove();
-        toast.success("Successfully deleted");
+        try {
+          await truckService.delete(row.id);
+          row.remove();
+          toast.success("Successfully deleted");
+        } catch (error) {
+          console.error(error);
+          if (error instanceof Error) {
+            toast.error(error.message);
+          }
+        }
       }
     }
   }
@@ -133,27 +147,34 @@ async function onAddTruck({
   rentalPrice = Number(rentalPrice);
   capacity = Number(capacity);
 
-  if (Number.isNaN(rentalPrice)) {
-    throw new TypeError("Rental price must be a number");
+  try {
+    if (Number.isNaN(rentalPrice)) {
+      throw new TypeError("Rental price must be a number");
+    }
+
+    if (Number.isNaN(capacity)) {
+      throw new TypeError("Capacity must be a number");
+    }
+
+    const truck = await truckService.create({
+      make,
+      model,
+      cargoType,
+      capacity,
+      rentalPrice,
+    });
+
+    tableManager.addRow(truck);
+
+    editor.clear();
+
+    toast.success(`Successfully added ${truck.make} ${truck.model}`);
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
   }
-
-  if (Number.isNaN(capacity)) {
-    throw new TypeError("Capacity must be a number");
-  }
-
-  const truck = await truckService.create({
-    make,
-    model,
-    cargoType,
-    capacity,
-    rentalPrice,
-  });
-
-  tableManager.addRow(truck);
-
-  editor.clear();
-
-  toast.success(`Successfully added ${truck.make} ${truck.model}`);
 }
 
 async function hydrate() {

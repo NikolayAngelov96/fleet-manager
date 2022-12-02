@@ -5,6 +5,7 @@ import { LocalStorage } from "./data/Storage";
 import { TruckService } from "./data/TruckService";
 import { a, td, tr } from "./dom/dom";
 import { Table } from "./dom/Table";
+import { toast } from "./dom/Toaster";
 import { getSearchParams, SearchParams } from "./utils";
 
 // TODO: add truck service
@@ -59,17 +60,24 @@ async function hydrate() {
 
   setUpFormValues(searchParams);
 
-  const cars = await carService.getAll();
-  const trucks = await truckService.getAll();
+  try {
+    const cars = await carService.getAll();
+    const trucks = await truckService.getAll();
 
-  const vehicles: Vehicle[] = [].concat(trucks).concat(cars);
+    const vehicles: Vehicle[] = [].concat(trucks).concat(cars);
 
-  const filteredVehicles = filterBySearchParams(searchParams, vehicles);
+    const filteredVehicles = filterBySearchParams(searchParams, vehicles);
 
-  filteredVehicles.sort((a, b) => a.make.localeCompare(b.make));
+    filteredVehicles.sort((a, b) => a.make.localeCompare(b.make));
 
-  for (const vehicle of filteredVehicles) {
-    tableManager.addRow(vehicle);
+    for (const vehicle of filteredVehicles) {
+      tableManager.addRow(vehicle);
+    }
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
   }
 }
 
