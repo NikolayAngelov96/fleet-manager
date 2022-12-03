@@ -5,6 +5,7 @@
     "sourceMap": true,
     "module": "ES6",
     "moduleResolution": "Node",
-    "outDir": "./dist/"
+    "outDir": "./dist/",
+    "allowSyntheticDefaultImports": true
   }
 }
