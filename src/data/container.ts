@@ -1,4 +1,5 @@
 import Bottle from "bottlejs";
+import { Loader } from "../dom/Loader";
 import { CarService } from "./CarService";
 import { Collection } from "./Collection";
 import { Car, Truck } from "./models";
@@ -11,6 +12,7 @@ const bottle = new Bottle();
 bottle.service("Collection", Collection);
 bottle.service("LocalStorage", LocalStorage);
 bottle.service("RemoteStorage", RemoteStorage);
+bottle.service("Loader", Loader);
 
 bottle.factory("CarService", function (container) {
   const storage = container.RemoteStorage;
