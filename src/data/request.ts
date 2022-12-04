@@ -1,6 +1,8 @@
+import { xParsRestKey, xParseAppId } from "./keys";
+
 type HTTPMethods = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
 
-const host = "";
+const host = "https://parseapi.back4app.com/classes";
 
 async function request(method: HTTPMethods, url: string, data?: any) {
   const options: {
@@ -9,7 +11,10 @@ async function request(method: HTTPMethods, url: string, data?: any) {
     body?: string;
   } = {
     method,
-    headers: {},
+    headers: {
+      "X-Parse-Application-Id": xParseAppId,
+      "X-Parse-REST-API-Key": xParsRestKey,
+    },
   };
 
   if (data !== undefined) {
