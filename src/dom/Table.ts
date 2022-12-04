@@ -38,8 +38,6 @@ export class Table {
 
     this.records[indexOfOldRecord] = record;
 
-    const nextSibling = row.nextElementSibling;
-
     const newRow = this.createRow(record);
 
     row.replaceWith(newRow);
