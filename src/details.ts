@@ -1,22 +1,14 @@
 import { CarService } from "./data/CarService";
-import { Collection } from "./data/Collection";
+import bottle from "./data/container";
 import { Car, Truck, Vehicle } from "./data/models";
-import { LocalStorage } from "./data/Storage";
 import { TruckService } from "./data/TruckService";
 import { p, span, strong } from "./dom/dom";
 import { Editor } from "./dom/Editor";
 import { toast } from "./dom/Toaster";
 import { capitalizeWord, getSearchParams } from "./utils";
 
-const storage = new LocalStorage<Car>();
-const collection = new Collection<Car>(storage, "cars");
-
-const carService = new CarService(collection);
-
-const truckStorage = new LocalStorage<Truck>();
-const truckCollection = new Collection<Truck>(truckStorage, "trucks");
-
-const truckService = new TruckService(truckCollection);
+const carService = bottle.container.CarService as CarService;
+const truckService = bottle.container.TruckService as TruckService;
 
 const detailsContainer = document.querySelector(".details");
 
@@ -46,7 +38,7 @@ async function onCancelContract(e: MouseEvent) {
     if (vehicle instanceof Car) {
       await carService.update(vehicle.id, vehicle);
     } else if (vehicle instanceof Truck) {
-      await truckCollection.update(vehicle.id, vehicle);
+      await truckService.update(vehicle.id, vehicle);
     }
 
     rentedName.parentElement.style.display = "none";
@@ -71,7 +63,7 @@ async function onSubmit(person: { name: string }) {
     if (vehicle instanceof Car) {
       await carService.update(vehicle.id, vehicle);
     } else if (vehicle instanceof Truck) {
-      await truckCollection.update(vehicle.id, vehicle);
+      await truckService.update(vehicle.id, vehicle);
     }
 
     rentedName.textContent = vehicle.rentedTo;

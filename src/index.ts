@@ -1,23 +1,15 @@
 import { CarService } from "./data/CarService";
-import { Collection } from "./data/Collection";
+import bottle from "./data/container";
 import { Car, Truck, Vehicle } from "./data/models";
-import { LocalStorage } from "./data/Storage";
 import { TruckService } from "./data/TruckService";
 import { a, td, tr } from "./dom/dom";
 import { Table } from "./dom/Table";
 import { toast } from "./dom/Toaster";
 import { getSearchParams, SearchParams } from "./utils";
 
-// TODO: add truck service
-const storage = new LocalStorage<Car>();
-const collection = new Collection<Car>(storage, "cars");
+const carService = bottle.container.CarService as CarService;
 
-const carService = new CarService(collection);
-
-const truckStorage = new LocalStorage<Truck>();
-const truckCollection = new Collection<Truck>(truckStorage, "trucks");
-
-const truckService = new TruckService(truckCollection);
+const truckService = bottle.container.TruckService as TruckService;
 
 const tableBody = document.querySelector(
   ".overview tbody"

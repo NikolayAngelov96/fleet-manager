@@ -1,11 +1,14 @@
 import { CarService, SubmitCarData } from "./data/CarService";
 import { Collection } from "./data/Collection";
 import { Car } from "./data/models";
+import { RemoteStorage } from "./data/RemoteStorage";
 import { LocalStorage } from "./data/Storage";
 import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
 import { Table } from "./dom/Table";
 import { toast } from "./dom/Toaster";
+
+import bottle from "./data/container";
 
 const newCarSection = document.querySelector(".editor-new") as HTMLElement;
 const editCarSection = document.querySelector(".editor-edit") as HTMLElement;
@@ -20,13 +23,9 @@ addBtn.addEventListener("click", () => {
 });
 
 // TODO:
-//      validate that onSubmit there are no empty fields
 //      validate that numbered values are not below zero
-//      try catch all request and toast message on error
 
-const storage = new LocalStorage<Car>();
-const collection = new Collection<Car>(storage, "cars");
-const carService = new CarService(collection);
+const carService = bottle.container.CarService as CarService;
 
 const tableBody = document.querySelector(
   ".overview tbody"
@@ -89,6 +88,7 @@ async function onButtonsClick(e: MouseEvent) {
 
         try {
           const edittedCar = await carService.update(row.id, record);
+          console.log(edittedCar);
 
           tableManager.updateRow(edittedCar.id, edittedCar);
 

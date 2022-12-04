@@ -1,6 +1,5 @@
-import { Collection } from "./data/Collection";
+import bottle from "./data/container";
 import { Truck } from "./data/models";
-import { LocalStorage } from "./data/Storage";
 import { TruckService, SubmitTruckData } from "./data/TruckService";
 import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
@@ -17,10 +16,7 @@ addBtn.addEventListener("click", () => {
     (editTruckSection.style.display = "none");
 });
 
-const storage = new LocalStorage<Truck>();
-const collection = new Collection<Truck>(storage, "trucks");
-
-const truckService = new TruckService(collection);
+const truckService = bottle.container.TruckService as TruckService;
 
 const createForm = document.querySelector(".create-form") as HTMLFormElement;
 const tableBody = document.querySelector(
