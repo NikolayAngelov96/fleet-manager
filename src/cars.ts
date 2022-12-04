@@ -1,14 +1,12 @@
 import { CarService, SubmitCarData } from "./data/CarService";
-import { Collection } from "./data/Collection";
 import { Car } from "./data/models";
-import { RemoteStorage } from "./data/RemoteStorage";
-import { LocalStorage } from "./data/Storage";
 import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
 import { Table } from "./dom/Table";
 import { toast } from "./dom/Toaster";
 
 import bottle from "./data/container";
+import { Loader } from "./dom/Loader";
 
 const newCarSection = document.querySelector(".editor-new") as HTMLElement;
 const editCarSection = document.querySelector(".editor-edit") as HTMLElement;
@@ -26,6 +24,7 @@ addBtn.addEventListener("click", () => {
 //      validate that numbered values are not below zero
 
 const carService = bottle.container.CarService as CarService;
+const loader = bottle.container.Loader as Loader;
 
 const tableBody = document.querySelector(
   ".overview tbody"
@@ -189,7 +188,10 @@ async function onAddCar({
 }
 
 async function hydrate() {
+  loader.show(tableBody);
   const cars = await carService.getAll();
+
+  loader.hide();
 
   for (const car of cars) {
     tableManager.addRow(car);

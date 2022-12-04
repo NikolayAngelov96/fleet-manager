@@ -4,13 +4,16 @@ import { Car, Truck, Vehicle } from "./data/models";
 import { TruckService } from "./data/TruckService";
 import { p, span, strong } from "./dom/dom";
 import { Editor } from "./dom/Editor";
+import { Loader } from "./dom/Loader";
 import { toast } from "./dom/Toaster";
 import { capitalizeWord, getSearchParams } from "./utils";
 
 const carService = bottle.container.CarService as CarService;
 const truckService = bottle.container.TruckService as TruckService;
 
-const detailsContainer = document.querySelector(".details");
+const loader = bottle.container.Loader as Loader;
+
+const detailsContainer = document.querySelector(".details") as HTMLElement;
 
 const form = document.querySelector("form");
 
@@ -89,8 +92,11 @@ hydrate();
 async function hydrate() {
   const vehicleTitle = document.getElementById("vehicle-make");
 
+  loader.show(detailsContainer);
+
   const vehicle = await getVehicle(query.id);
 
+  loader.hide();
   const status = vehicle.rentedTo == null ? "Available" : "Rented";
 
   if (vehicle.rentedTo != null) {

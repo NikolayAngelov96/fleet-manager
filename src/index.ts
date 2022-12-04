@@ -3,6 +3,7 @@ import bottle from "./data/container";
 import { Car, Truck, Vehicle } from "./data/models";
 import { TruckService } from "./data/TruckService";
 import { a, td, tr } from "./dom/dom";
+import { Loader } from "./dom/Loader";
 import { Table } from "./dom/Table";
 import { toast } from "./dom/Toaster";
 import { getSearchParams, SearchParams } from "./utils";
@@ -10,6 +11,7 @@ import { getSearchParams, SearchParams } from "./utils";
 const carService = bottle.container.CarService as CarService;
 
 const truckService = bottle.container.TruckService as TruckService;
+const loader = bottle.container.Loader as Loader;
 
 const tableBody = document.querySelector(
   ".overview tbody"
@@ -52,6 +54,8 @@ async function hydrate() {
 
   setUpFormValues(searchParams);
 
+  loader.show(tableBody);
+
   try {
     const cars = await carService.getAll();
     const trucks = await truckService.getAll();
@@ -62,6 +66,7 @@ async function hydrate() {
 
     filteredVehicles.sort((a, b) => a.make.localeCompare(b.make));
 
+    loader.hide();
     for (const vehicle of filteredVehicles) {
       tableManager.addRow(vehicle);
     }

@@ -3,6 +3,7 @@ import { Truck } from "./data/models";
 import { TruckService, SubmitTruckData } from "./data/TruckService";
 import { button, td, tr } from "./dom/dom";
 import { Editor } from "./dom/Editor";
+import { Loader } from "./dom/Loader";
 import { Table } from "./dom/Table";
 import { toast } from "./dom/Toaster";
 
@@ -17,6 +18,7 @@ addBtn.addEventListener("click", () => {
 });
 
 const truckService = bottle.container.TruckService as TruckService;
+const loader = bottle.container.Loader as Loader;
 
 const createForm = document.querySelector(".create-form") as HTMLFormElement;
 const tableBody = document.querySelector(
@@ -174,7 +176,10 @@ async function onAddTruck({
 }
 
 async function hydrate() {
+  loader.show(tableBody);
   const trucks = await truckService.getAll();
+
+  loader.hide();
 
   for (const truck of trucks) {
     tableManager.addRow(truck);
