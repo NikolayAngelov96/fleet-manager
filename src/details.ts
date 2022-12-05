@@ -97,6 +97,8 @@ async function hydrate() {
   const vehicle = await getVehicle(query.id);
 
   loader.hide();
+  (document.querySelector(".rental") as HTMLDivElement).style.display =
+    "inline-block";
   const status = vehicle.rentedTo == null ? "Available" : "Rented";
 
   if (vehicle.rentedTo != null) {

@@ -238,3 +238,7 @@ select {
     transform: rotate(360deg);
   }
 }
+
+.rental {
+  display: none;
+}
